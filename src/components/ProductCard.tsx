@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/store/cartStore';
-import type { Product } from '@/data/products';
+import type { Product } from '@/hooks/useProducts';
 
 const ProductCard = ({ product }: { product: Product }) => {
   const addItem = useCartStore((s) => s.addItem);
@@ -12,7 +12,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       <Link to={`/product/${product.id}`} className="block overflow-hidden">
         <div className="aspect-square overflow-hidden bg-muted">
           <img
-            src={product.image_url}
+            src={product.image_url || ''}
             alt={product.name}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -42,7 +42,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                 id: product.id,
                 name: product.name,
                 price: product.price,
-                image_url: product.image_url,
+                image_url: product.image_url || '',
               })
             }
             className="gap-1"

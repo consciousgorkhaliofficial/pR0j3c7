@@ -2,9 +2,12 @@ import { useParams, Link } from 'react-router-dom';
 import { ShoppingCart, ArrowLeft, Wine, Minus, Plus, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import Layout from '@/components/Layout';
 import { useProduct } from '@/hooks/useProducts';
 import { useCartStore } from '@/store/cartStore';
+import ReviewList from '@/components/ReviewList';
+import ReviewForm from '@/components/ReviewForm';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();

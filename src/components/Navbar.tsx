@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Wine } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { ShoppingCart, Menu, X, Wine, User, LogOut } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 
 const navLinks = [
@@ -14,7 +15,14 @@ const navLinks = [
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const totalItems = useCartStore((s) => s.totalItems());
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border/50 bg-background/95 backdrop-blur-md">
@@ -47,8 +55,28 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Cart + Mobile toggle */}
-        <div className="flex items-center gap-3">
+        {/* Right side: Auth + Cart + Mobile */}
+        <div className="flex items-center gap-2">
+          {/* Auth buttons - desktop */}
+          <div className="hidden items-center gap-2 md:flex">
+            {user ? (
+              <>
+                <span className="max-w-[120px] truncate text-xs text-muted-foreground">
+                  {user.email}
+                </span>
+                <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-1 text-xs">
+                  <LogOut className="h-3.5 w-3.5" /> Logout
+                </Button>
+              </>
+            ) : (
+              <Link to="/auth">
+                <Button variant="outline" size="sm" className="gap-1 text-xs">
+                  <User className="h-3.5 w-3.5" /> Sign In
+                </Button>
+              </Link>
+            )}
+          </div>
+
           <Link to="/cart" className="relative">
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingCart className="h-5 w-5" />
@@ -85,6 +113,20 @@ const Navbar = () => {
               {l.label}
             </Link>
           ))}
+          <div className="border-t border-border pt-3">
+            {user ? (
+              <div className="flex items-center justify-between">
+                <span className="truncate text-xs text-muted-foreground">{user.email}</span>
+                <Button variant="ghost" size="sm" onClick={() => { handleSignOut(); setMobileOpen(false); }} className="gap-1 text-xs">
+                  <LogOut className="h-3.5 w-3.5" /> Logout
+                </Button>
+              </div>
+            ) : (
+              <Link to="/auth" onClick={() => setMobileOpen(false)} className="block py-3 text-sm font-medium text-primary">
+                Sign In / Sign Up
+              </Link>
+            )}
+          </div>
         </div>
       )}
     </nav>

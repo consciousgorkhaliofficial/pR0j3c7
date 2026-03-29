@@ -2,9 +2,12 @@ import { useParams, Link } from 'react-router-dom';
 import { ShoppingCart, ArrowLeft, Wine, Minus, Plus, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import Layout from '@/components/Layout';
 import { useProduct } from '@/hooks/useProducts';
 import { useCartStore } from '@/store/cartStore';
+import ReviewList from '@/components/ReviewList';
+import ReviewForm from '@/components/ReviewForm';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -97,6 +100,18 @@ const ProductDetail = () => {
                 <ShoppingCart className="h-4 w-4" /> Add to Cart
               </Button>
             </div>
+          </div>
+        </div>
+
+        {/* Reviews Section */}
+        <Separator className="my-12" />
+        <div className="grid gap-10 lg:grid-cols-2">
+          <div>
+            <h2 className="mb-6 font-heading text-2xl font-bold">Customer Reviews</h2>
+            <ReviewList productId={product.id} />
+          </div>
+          <div>
+            <ReviewForm productId={product.id} />
           </div>
         </div>
       </div>

@@ -63,6 +63,13 @@ const Navbar = () => {
           <div className="hidden items-center gap-2 md:flex">
             {user ? (
               <>
+                {isAdmin && (
+                  <Link to="/admin">
+                    <Button variant="ghost" size="sm" className="gap-1 text-xs">
+                      <ShieldCheck className="h-3.5 w-3.5" /> Admin
+                    </Button>
+                  </Link>
+                )}
                 <span className="max-w-[120px] truncate text-xs text-muted-foreground">
                   {user.email}
                 </span>

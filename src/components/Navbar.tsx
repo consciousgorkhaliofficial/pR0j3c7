@@ -19,6 +19,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const totalItems = useCartStore((s) => s.totalItems());
   const { user, signOut } = useAuth();
+  const { data: isAdmin } = useIsAdmin();
 
   const handleSignOut = async () => {
     await signOut();

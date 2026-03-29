@@ -4,7 +4,7 @@ import { ArrowRight, Star, Leaf, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Layout from '@/components/Layout';
 import ProductCard from '@/components/ProductCard';
-import { products } from '@/data/products';
+import { useFeaturedProducts } from '@/hooks/useProducts';
 import heroImage from '@/assets/hero-wine.jpg';
 
 const heroSlides = [
@@ -27,7 +27,7 @@ const heroSlides = [
 
 const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const featured = products.filter((p) => p.featured);
+  const { data: featured = [], isLoading } = useFeaturedProducts();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -69,7 +69,6 @@ const Index = () => {
             </div>
           </div>
         </div>
-        {/* Slide indicators */}
         <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 gap-2">
           {heroSlides.map((_, i) => (
             <button
@@ -114,11 +113,19 @@ const Index = () => {
               Handpicked favorites from our royal collection
             </p>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {[1,2,3,4].map(i => (
+                <div key={i} className="h-80 animate-pulse rounded-lg bg-muted" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {featured.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          )}
           <div className="mt-10 text-center">
             <Link to="/shop">
               <Button variant="outline" size="lg" className="gap-2">

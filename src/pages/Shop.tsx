@@ -3,26 +3,27 @@ import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import Layout from '@/components/Layout';
 import ProductCard from '@/components/ProductCard';
-import { products, categories } from '@/data/products';
+import { useProducts, categories } from '@/hooks/useProducts';
 
 const Shop = () => {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
   const [sort, setSort] = useState('name');
+  const { data: products = [], isLoading } = useProducts();
 
   const filtered = useMemo(() => {
     let result = products.filter((p) => {
       const matchesCategory = category === 'all' || p.category === category;
       const matchesSearch =
         p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.fruit.toLowerCase().includes(search.toLowerCase());
+        (p.fruit?.toLowerCase().includes(search.toLowerCase()) ?? false);
       return matchesCategory && matchesSearch;
     });
     if (sort === 'price-asc') result.sort((a, b) => a.price - b.price);
     else if (sort === 'price-desc') result.sort((a, b) => b.price - a.price);
     else result.sort((a, b) => a.name.localeCompare(b.name));
     return result;
-  }, [search, category, sort]);
+  }, [products, search, category, sort]);
 
   return (
     <Layout>
@@ -72,7 +73,13 @@ const Shop = () => {
         </div>
 
         {/* Products */}
-        {filtered.length === 0 ? (
+        {isLoading ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {[1,2,3,4,5,6].map(i => (
+              <div key={i} className="h-80 animate-pulse rounded-lg bg-muted" />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="py-20 text-center text-muted-foreground">
             No wines found matching your criteria.
           </div>

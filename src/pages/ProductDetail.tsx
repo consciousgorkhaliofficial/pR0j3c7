@@ -1,16 +1,26 @@
 import { useParams, Link } from 'react-router-dom';
-import { ShoppingCart, ArrowLeft, Wine, Minus, Plus } from 'lucide-react';
+import { ShoppingCart, ArrowLeft, Wine, Minus, Plus, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import Layout from '@/components/Layout';
-import { products } from '@/data/products';
+import { useProduct } from '@/hooks/useProducts';
 import { useCartStore } from '@/store/cartStore';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const product = products.find((p) => p.id === id);
+  const { data: product, isLoading } = useProduct(id || '');
   const addItem = useCartStore((s) => s.addItem);
   const [qty, setQty] = useState(1);
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="container mx-auto flex items-center justify-center px-4 py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
+  }
 
   if (!product) {
     return (
@@ -31,7 +41,7 @@ const ProductDetail = () => {
         id: product.id,
         name: product.name,
         price: product.price,
-        image_url: product.image_url,
+        image_url: product.image_url || '',
       });
     }
   };
@@ -44,10 +54,9 @@ const ProductDetail = () => {
         </Link>
 
         <div className="grid gap-10 md:grid-cols-2">
-          {/* Image */}
           <div className="overflow-hidden rounded-xl bg-muted">
             <img
-              src={product.image_url}
+              src={product.image_url || ''}
               alt={product.name}
               className="h-full w-full object-cover"
               width={800}
@@ -55,7 +64,6 @@ const ProductDetail = () => {
             />
           </div>
 
-          {/* Details */}
           <div className="flex flex-col justify-center">
             <span className="text-xs font-semibold uppercase tracking-widest text-accent">
               {product.fruit} Wine · {product.category}

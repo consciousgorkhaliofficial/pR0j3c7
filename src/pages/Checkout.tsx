@@ -1,21 +1,48 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Layout from '@/components/Layout';
 import { useCartStore } from '@/store/cartStore';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Checkout = () => {
   const { items, totalPrice, clearCart } = useCartStore();
+  const { user, loading } = useAuth();
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: '', address: '', city: '', phone: '', email: '' });
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="container mx-auto px-4 py-20 text-center text-muted-foreground">Loading...</div>
+      </Layout>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Layout>
+        <div className="container mx-auto flex flex-col items-center px-4 py-20 text-center">
+          <LogIn className="mb-4 h-12 w-12 text-muted-foreground/50" />
+          <h1 className="font-heading text-2xl font-bold">Sign In Required</h1>
+          <p className="mt-2 text-muted-foreground">Please sign in to proceed with checkout.</p>
+          <Link to="/auth">
+            <Button className="mt-6 gap-2">
+              <LogIn className="h-4 w-4" /> Sign In
+            </Button>
+          </Link>
+        </div>
+      </Layout>
+    );
+  }
 
   if (submitted) {
     return (
       <Layout>
         <div className="container mx-auto flex flex-col items-center px-4 py-20 text-center">
-          <CheckCircle className="mb-4 h-16 w-16 text-green-600" />
+          <CheckCircle className="mb-4 h-16 w-16 text-accent" />
           <h1 className="font-heading text-3xl font-bold">Order Placed!</h1>
           <p className="mt-2 text-muted-foreground">Thank you for your order. We'll contact you shortly.</p>
           <Link to="/shop"><Button className="mt-6">Continue Shopping</Button></Link>

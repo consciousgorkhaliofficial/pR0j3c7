@@ -14,7 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      products: {
+        Row: {
+          alcohol_percentage: number | null
+          category: string
+          created_at: string | null
+          description: string | null
+          featured: boolean | null
+          fruit: string | null
+          id: string
+          image_url: string | null
+          in_stock: boolean | null
+          name: string
+          price: number
+          volume_ml: number | null
+        }
+        Insert: {
+          alcohol_percentage?: number | null
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          featured?: boolean | null
+          fruit?: string | null
+          id?: string
+          image_url?: string | null
+          in_stock?: boolean | null
+          name: string
+          price: number
+          volume_ml?: number | null
+        }
+        Update: {
+          alcohol_percentage?: number | null
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          featured?: boolean | null
+          fruit?: string | null
+          id?: string
+          image_url?: string | null
+          in_stock?: boolean | null
+          name?: string
+          price?: number
+          volume_ml?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

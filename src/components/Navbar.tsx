@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Wine, User, LogOut } from 'lucide-react';
+import { ShoppingCart, Menu, X, Wine, User, LogOut, ShieldCheck } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
 import { useAuth } from '@/contexts/AuthContext';
+import { useIsAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
 
 const navLinks = [
@@ -18,6 +19,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const totalItems = useCartStore((s) => s.totalItems());
   const { user, signOut } = useAuth();
+  const { data: isAdmin } = useIsAdmin();
 
   const handleSignOut = async () => {
     await signOut();
@@ -61,6 +63,13 @@ const Navbar = () => {
           <div className="hidden items-center gap-2 md:flex">
             {user ? (
               <>
+                {isAdmin && (
+                  <Link to="/admin">
+                    <Button variant="ghost" size="sm" className="gap-1 text-xs">
+                      <ShieldCheck className="h-3.5 w-3.5" /> Admin
+                    </Button>
+                  </Link>
+                )}
                 <span className="max-w-[120px] truncate text-xs text-muted-foreground">
                   {user.email}
                 </span>
